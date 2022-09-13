@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="https://jakarta.ee/xml/ns/persistence"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+  <persistence-unit name="default">
+
+    <!--
+        I wrote this to use MariaDB (basically MySQL) as a database, but it ought to be easy
+        to adapt to whatever your favourite RDBMS is.  MySQL syntax sql to create the tables
+        is included in resources and ought to be easily adaptable.
+    -->
+
+    <class>ssta.xwdgame.entity.Clue</class>
+    <class>ssta.xwdgame.entity.User</class>
+    <class>ssta.xwdgame.entity.Solved</class>
+    <properties>
+      <property name="hibernate.connection.url" value="jdbc:mariadb://tal:3306/xwdgame"/>
+      <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
+      <property name="hibernate.connection.username" value="SOME_USERNAME"/>
+      <property name="hibernate.connection.password" value="SOME_PASSWORD"/>
+      <property name="hibernate.show_sql" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>
