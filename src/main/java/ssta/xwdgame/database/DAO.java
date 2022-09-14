@@ -51,7 +51,7 @@ public class DAO {
         .unwrap(Session.class);
   }
 
-  private List<Solved> getSolved() {
+  public List<Solved> getSolved() {
     if (this.solved == null) {
       this.solved = entityManager.get()
           .createNamedQuery("Solved.fetchAll", Solved.class)

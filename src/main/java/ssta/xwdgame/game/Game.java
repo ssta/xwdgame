@@ -8,6 +8,7 @@ import ssta.xwdgame.entity.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class Game {
   private Clue currentClue;
   private String currentAnswer;
   private List<User> users;
+  private int nextClue = 0;
 
   public Game() {
     getUsers();
@@ -91,26 +93,62 @@ public class Game {
   private void newClue() {
     if (isNull(clues)) {
       clues = dao.getAllClues();
+      initClues(clues);
+      sortClues(clues);
     }
-    currentClue = getRandomClue();
+    currentClue = getNextClue();
     // throw away clues with digits in them
     while (currentClue.getClueText()
         .split("\\(")[0].matches(".*\\d{1,2}.*")) {
-      currentClue = getRandomClue();
+      currentClue = getNextClue();
     }
     currentAnswer = StringUtils.repeat(' ', (int) getCurrentClue().getLength());
     calcNextHintTime();
     updateScores();
   }
 
+  private void sortClues(List<Clue> clues) {
+    // shuffle first so we're random before ordering by last solved
+    Collections.shuffle(clues);
+    clues.sort(Comparator.comparing(Clue::getLastSolved));
+  }
+
+  /**
+   * Initialise all the clues with when they were last solved and who solved them.
+   * <p>
+   * Probably I ought to do this in the database, but meh, whatever...
+   * <p>
+   * Also sort the clues by when they were last solved - older sorts earlier.
+   */
+  private void initClues(List<Clue> allClues) {
+    List<Solved> solved = dao.getSolved();
+    List<User> allUsers = dao.getAllUsers();
+
+    allClues.forEach(clue -> findAndAddMostRecentSolveToClue(clue, solved, allUsers));
+  }
+
+  private void findAndAddMostRecentSolveToClue(final Clue clue, final List<Solved> solved, final List<User> allUsers) {
+    solved.stream()
+        .filter(s -> s.getClue() == clue.getId()).max(Comparator.comparing(Solved::getWhen).reversed())
+        .ifPresent(lastSolve -> {
+          User lastSolveUser = allUsers.stream()
+              .filter(user -> lastSolve.getTwitchuser() == user.getId())
+              .findAny()
+              .orElse(null);
+          clue.setSolvedByUser(lastSolveUser);
+          clue.setLastSolved(lastSolve.getWhen());
+        });
+  }
+
   private void calcNextHintTime() {
     nextHintTime = System.currentTimeMillis() + HINT_DELAY_TIME;
   }
 
-  private Clue getRandomClue() {
-    Clue clue = clues.get(r.nextInt(clues.size()));
+  private Clue getNextClue() {
+    Clue clue = clues.get(nextClue);
+    nextClue++;
     if (clue == null) {
-      return getRandomClue();
+      return getNextClue();
     } else {
       return clue;
     }

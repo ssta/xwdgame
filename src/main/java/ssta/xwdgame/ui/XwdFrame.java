@@ -6,7 +6,9 @@ import ssta.xwdgame.entity.Solved;
 import ssta.xwdgame.game.Game;
 import ssta.xwdgame.game.Score;
 
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class XwdFrame extends PApplet {
@@ -81,7 +83,15 @@ public class XwdFrame extends PApplet {
 
     // author/puzzle citation
     fill(200);
-    String citation = String.format("%s -- %s", clue.getSetter(), clue.getXwdName());
+    String citation;
+    if (!clueFinished) {
+      citation = String.format("%s -- %s; Last solved by %s %s",
+          clue.getSetter(), clue.getXwdName(),
+          clue.getSolvedByUser() == null ? "Nobody" : clue.getSolvedByUser().getName(),
+          clue.getLastSolved() > 0 ? new SimpleDateFormat(" dd MMM yyyy").format(new Date(clue.getLastSolved())) : "");
+    } else {
+      citation = String.format("%s -- %s", clue.getSetter(), clue.getXwdName());
+    }
     textAlign(LEFT, BOTTOM);
     textSize(15);
     text(citation, 0, 130);

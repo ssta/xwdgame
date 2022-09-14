@@ -17,8 +17,8 @@
     <properties>
       <property name="hibernate.connection.url" value="jdbc:mariadb://tal:3306/xwdgame"/>
       <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
-      <property name="hibernate.connection.username" value="SOME_USERNAME"/>
-      <property name="hibernate.connection.password" value="SOME_PASSWORD"/>
+      <property name="hibernate.connection.username" value="ssta"/>
+      <property name="hibernate.connection.password" value="Zubrette"/>
       <property name="hibernate.show_sql" value="true"/>
     </properties>
   </persistence-unit>

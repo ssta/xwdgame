@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Transient;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONObject;
@@ -42,6 +43,12 @@ public class Clue {
   @Basic
   @Column(name = "XWD_NAME", nullable = false, length = -1)
   private String xwdName;
+
+  @Transient
+  private long lastSolved;
+
+  @Transient
+  private User solvedByUser;
 
   public static Clue parseClue(JSONObject json, String creator, String xwdName) {
     Clue clue = new Clue();
@@ -145,6 +152,22 @@ public class Clue {
   public int hashCode() {
     return new HashCodeBuilder(17, 37).append(id).append(clueText).append(clueId).append(clueNumber).append(direction)
         .append(length).append(setter).append(solution).append(xwdName).toHashCode();
+  }
+
+  public long getLastSolved() {
+    return lastSolved;
+  }
+
+  public void setLastSolved(long lastSolved) {
+    this.lastSolved = lastSolved;
+  }
+
+  public User getSolvedByUser() {
+    return solvedByUser;
+  }
+
+  public void setSolvedByUser(User solvedByUser) {
+    this.solvedByUser = solvedByUser;
   }
 }
 
