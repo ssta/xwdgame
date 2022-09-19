@@ -8,7 +8,7 @@ I wrote this using MariaDB (it's very easy for me to set up in Debian), but
 there's really nothing requiring MariaDB/MySQL.
 
 I have provided a SQL script in ``resources/xwdgame_tables_create.sql`` which
-will create the tree database tables needed. They ought to be trivially easy
+will create the three database tables needed. They ought to be trivially easy
 to convert to your RDBMS of choice.
 
 Edit ``resources/META-INF/persistence.xml`` as appropriate for your environment
